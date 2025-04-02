@@ -1,9 +1,6 @@
 package com.evgeniy.riakhin.backend.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,12 +11,12 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "question")
-public class Question {
+@Table(name = "correct_answer")
+public class CorrectAnswer {
     @Id
-    @GeneratedValue()
+    @GeneratedValue
     private Long id;
 
-
-    private String question;
+    @Column(name = "correctAnswer")
+    private String correctAnswer;
 }
