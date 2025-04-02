@@ -11,12 +11,12 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "correct_answer")
+@Table(name = "correct_answers")
 public class CorrectAnswer {
     @Id
     @GeneratedValue
     private Long id;
 
-    @Column(name = "correctAnswer")
+    @Column(name = "correct_answer")
     private String correctAnswer;
 }
