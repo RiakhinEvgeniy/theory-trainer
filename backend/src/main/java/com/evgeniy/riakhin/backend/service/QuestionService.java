@@ -1,6 +1,6 @@
 package com.evgeniy.riakhin.backend.service;
 
-import com.evgeniy.riakhin.backend.model.Question;
+import com.evgeniy.riakhin.backend.entity.Question;
 import lombok.Data;
 import org.springframework.stereotype.Service;
 

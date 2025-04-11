@@ -1,17 +1,14 @@
-package com.evgeniy.riakhin.backend.model;
+package com.evgeniy.riakhin.backend.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
+@Data
+@Builder
 @Entity
-@Table(name = "correct_answers")
+@Table(name = "correct_answer")
 public class CorrectAnswer {
     @Id
     @GeneratedValue

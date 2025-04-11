@@ -1,17 +1,17 @@
-package com.evgeniy.riakhin.backend.model;
+package com.evgeniy.riakhin.backend.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@AllArgsConstructor
+@Data
 @NoArgsConstructor
-@Getter
-@Setter
+@AllArgsConstructor
+@Builder
 @Entity
-@Table(name = "questions")
+@Table(name = "question")
 public class Question {
     @Id
     @GeneratedValue()
@@ -19,4 +19,8 @@ public class Question {
 
     @Column(name = "question", nullable = false)
     private String question;
+
+    public Question(String question) {
+        this.question = question;
+    }
 }
