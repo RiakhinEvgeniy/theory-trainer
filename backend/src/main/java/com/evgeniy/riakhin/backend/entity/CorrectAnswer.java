@@ -15,16 +15,10 @@ public class CorrectAnswer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "correct_answer")
+    @Column(name = "answer")
     private String correctAnswer;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    @JsonBackReference
-    private User user;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "question_id", nullable = false)
-    @JsonBackReference
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "question_id", referencedColumnName = "id", nullable = false, unique = true)
     private Question question;
 }

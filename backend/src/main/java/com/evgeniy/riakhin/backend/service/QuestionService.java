@@ -1,20 +1,21 @@
 package com.evgeniy.riakhin.backend.service;
 
-import com.evgeniy.riakhin.backend.entity.Question;
+import com.evgeniy.riakhin.backend.dto.QuestionResponseDTO;
+import com.evgeniy.riakhin.backend.repository.QuestionRepository;
 import lombok.Data;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Data
 @Service
 public class QuestionService {
-    public List<Question> getQuestions() {
-        return List.of(
-                new Question("question1"),
-                new Question("question2"),
-                new Question("question3"),
-                new Question("question4"),
-                new Question("question5"));
+
+    private final QuestionRepository questionRepository;
+
+    @Transactional
+    public List<QuestionResponseDTO> findAll() {
+        return questionRepository.getAllQuestions().stream().map(QuestionResponseDTO::fromEntity).toList();
     }
 }
