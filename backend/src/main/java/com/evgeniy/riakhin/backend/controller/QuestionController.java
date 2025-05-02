@@ -1,7 +1,6 @@
 package com.evgeniy.riakhin.backend.controller;
 
 import com.evgeniy.riakhin.backend.dto.QuestionResponseDTO;
-import com.evgeniy.riakhin.backend.entity.Question;
 import com.evgeniy.riakhin.backend.service.QuestionService;
 import lombok.Data;
 import org.springframework.http.ResponseEntity;

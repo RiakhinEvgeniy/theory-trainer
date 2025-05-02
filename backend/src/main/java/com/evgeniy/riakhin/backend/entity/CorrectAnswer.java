@@ -1,8 +1,10 @@
 package com.evgeniy.riakhin.backend.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,4 +23,8 @@ public class CorrectAnswer {
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "question_id", referencedColumnName = "id", nullable = false, unique = true)
     private Question question;
+
+    @Column(name = "variant")
+    @Enumerated(EnumType.STRING)
+    private VariantOfAnswer variantOfAnswer;
 }
