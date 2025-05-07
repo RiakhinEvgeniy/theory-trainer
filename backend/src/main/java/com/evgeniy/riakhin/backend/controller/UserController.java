@@ -1,5 +1,7 @@
 package com.evgeniy.riakhin.backend.controller;
 
+import com.evgeniy.riakhin.backend.dto.UserCreateDTO;
+import com.evgeniy.riakhin.backend.dto.UserResponseDTO;
 import com.evgeniy.riakhin.backend.entity.User;
 import com.evgeniy.riakhin.backend.service.UserService;
 import lombok.Data;
@@ -21,11 +23,18 @@ public class UserController {
     }
 
     @GetMapping("/{name}")
-    public ResponseEntity<User> getUserByName(@PathVariable("name") String name) {
-        User user = userService.findUserByName(name);
-        if (user != null) {
-            return new ResponseEntity<>(user, HttpStatus.OK);
+    public ResponseEntity<UserResponseDTO> getUserByName(@PathVariable("name") String name) {
+        UserResponseDTO userResponseDTO = userService.findUserByName(name);
+        if (userResponseDTO != null) {
+            System.out.println(userResponseDTO.name());
+            return new ResponseEntity<>(userResponseDTO, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @PostMapping()
+    public ResponseEntity<UserResponseDTO> createUser(@RequestBody UserCreateDTO userCreateDTO) {
+        UserResponseDTO userResponseDTO = userService.saveUser(userCreateDTO);
+        return new ResponseEntity<>(userResponseDTO, HttpStatus.CREATED);
     }
 }
