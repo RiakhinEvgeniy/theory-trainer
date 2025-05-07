@@ -28,4 +28,7 @@ public class User {
     @Column(name = "ROLE")
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @Version
+    Long version;
 }
