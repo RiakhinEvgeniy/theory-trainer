@@ -3,6 +3,7 @@ package com.evgeniy.riakhin.backend.service;
 import com.evgeniy.riakhin.backend.dto.UserCreateDTO;
 import com.evgeniy.riakhin.backend.dto.UserResponseDTO;
 import com.evgeniy.riakhin.backend.entity.User;
+import com.evgeniy.riakhin.backend.exception.UserDeleteException;
 import com.evgeniy.riakhin.backend.exception.UserNotFoundById;
 import com.evgeniy.riakhin.backend.exception.UserNotFoundByName;
 import com.evgeniy.riakhin.backend.mapper.UserMapper;
@@ -59,6 +60,14 @@ public class UserService {
         } catch (ObjectOptimisticLockingFailureException ex) {
             throw new ConcurrentModificationException("User was modified by another thread" + ex);
         }
+    }
+
+    @Transactional(timeout = 3, rollbackFor = UserDeleteException.class)
+    public void deleteUser(Long id) {
+        if (!userRepository.existsById(id)) {
+            throw new UserDeleteException("User not found by id: " + id);
+        }
+        userRepository.deleteById(id);
     }
 
     private void updateFieldsOfUser(User user, UserCreateDTO userCreateDTO) {

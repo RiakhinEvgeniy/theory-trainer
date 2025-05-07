@@ -3,8 +3,10 @@ package com.evgeniy.riakhin.backend.controller;
 import com.evgeniy.riakhin.backend.dto.UserCreateDTO;
 import com.evgeniy.riakhin.backend.dto.UserResponseDTO;
 import com.evgeniy.riakhin.backend.entity.User;
+import com.evgeniy.riakhin.backend.exception.UserDeleteException;
 import com.evgeniy.riakhin.backend.exception.UserNotFoundById;
 import com.evgeniy.riakhin.backend.exception.UserNotFoundByName;
+import com.evgeniy.riakhin.backend.repository.UserRepository;
 import com.evgeniy.riakhin.backend.service.UserService;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
@@ -18,6 +20,7 @@ import java.util.List;
 @RequestMapping("/users")
 public class UserController {
     private final UserService userService;
+    private final UserRepository userRepository;
 
     @GetMapping
     public List<User> getUsers() {
@@ -58,6 +61,18 @@ public class UserController {
             return new ResponseEntity<>(userResponseDTO, HttpStatus.OK);
         } catch (UserNotFoundById ex) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @DeleteMapping("/id/{id}")
+    public ResponseEntity<String> deleteUserById(@PathVariable("id") Long id) {
+        try {
+            userService.deleteUser(id);
+                return ResponseEntity.ok("User deleted successfully with id: " + id);
+        } catch (UserDeleteException ex) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 }
