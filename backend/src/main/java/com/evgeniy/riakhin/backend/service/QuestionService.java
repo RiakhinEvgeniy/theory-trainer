@@ -1,6 +1,8 @@
 package com.evgeniy.riakhin.backend.service;
 
 import com.evgeniy.riakhin.backend.dto.QuestionResponseDTO;
+import com.evgeniy.riakhin.backend.entity.Question;
+import com.evgeniy.riakhin.backend.mapper.QuestionMapper;
 import com.evgeniy.riakhin.backend.repository.QuestionRepository;
 import lombok.Data;
 import org.springframework.stereotype.Service;
@@ -14,8 +16,9 @@ public class QuestionService {
 
     private final QuestionRepository questionRepository;
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<QuestionResponseDTO> findAll() {
-        return questionRepository.getAllQuestions().stream().map(QuestionResponseDTO::fromEntity).toList();
+        List<Question> allQuestions = questionRepository.getAllQuestions();
+        return allQuestions.stream().map(QuestionMapper::toDTO).toList();
     }
 }
