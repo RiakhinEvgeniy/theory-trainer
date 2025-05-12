@@ -53,7 +53,7 @@ public class UserService {
     public UserResponseDTO updateUser(Long id, UserCreateDTO userCreateDTO) {
         try {
             User user = userRepository.findUserById(id)
-                    .orElseThrow(() -> new UserNotFoundById("User not found by id: " + id));
+                    .orElseThrow(() -> new UserNotFoundById("User not found for updating by id: " + id));
             updateFieldsOfUser(user, userCreateDTO);
             userRepository.save(user);
             return userMapper.toDTO(user);
@@ -65,7 +65,7 @@ public class UserService {
     @Transactional(timeout = 3, rollbackFor = UserDeleteException.class)
     public void deleteUser(Long id) {
         if (!userRepository.existsById(id)) {
-            throw new UserDeleteException("User not found by id: " + id);
+            throw new UserDeleteException("User not found for deleting by id: " + id);
         }
         userRepository.deleteById(id);
     }
