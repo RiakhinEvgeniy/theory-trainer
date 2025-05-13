@@ -3,6 +3,9 @@ package com.evgeniy.riakhin.backend.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -23,6 +26,19 @@ public class Question {
 
     public Question(String question) {
         this.question = question;
+    }
+
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    List<WrongAnswer> wrongAnswers = new ArrayList<>();
+
+    public void addWrongAnswer(WrongAnswer wr) {
+        wrongAnswers.add(wr);
+        wr.setQuestion(this);
+    }
+
+    public void removeWrongAnswer(WrongAnswer wr) {
+        wrongAnswers.remove(wr);
+        wr.setQuestion(null);
     }
 
     public void addCorrectAnswer(CorrectAnswer correctAnswer) {

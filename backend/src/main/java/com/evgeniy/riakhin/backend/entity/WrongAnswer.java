@@ -1,17 +1,31 @@
 package com.evgeniy.riakhin.backend.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
+@Builder
+@Table(name = "wrong_answer")
 public class WrongAnswer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String answer;
+
+    @Column(name = "wrong_answer", nullable = false)
+    private String wrongAnswer;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "question_id", nullable = false)
+    private Question question;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "variant")
+    private VariantOfAnswer variantOfAnswer;
 }

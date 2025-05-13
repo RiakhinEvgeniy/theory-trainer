@@ -28,12 +28,18 @@ public class HandlerExceptionController {
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @ExceptionHandler(QuestionNotFoundById.class)
+    public ResponseEntity<ErrorResponse> handleQuestionNotFoundById(QuestionNotFoundById ex, HttpServletRequest req) {
+        ErrorResponse errorResponse = createErrorResponse(ex, req, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
     private ErrorResponse createErrorResponse(Exception ex, HttpServletRequest req, HttpStatus status) {
         return new ErrorResponse(
                 LocalDateTime.now(),
                 status.value(),
-                req.getRequestURI(),
-                ex.getMessage()
+                ex.getMessage(),
+                req.getRequestURI()
         );
     }
 }
