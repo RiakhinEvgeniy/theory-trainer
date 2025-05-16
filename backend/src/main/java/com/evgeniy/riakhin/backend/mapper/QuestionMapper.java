@@ -33,9 +33,15 @@ public class QuestionMapper {
 
     public static Question toEntity(QuestionCreateDTO dto) {
         Question q = new Question(dto.textQuestion());
-        CorrectAnswer correctAnswer = new CorrectAnswer(dto.textCorrectAnswer());
-        correctAnswer.setVariantOfAnswer(dto.variantOfAnswer());
-        q.addCorrectAnswer(correctAnswer);
+
+        CorrectAnswerCreateDTO correctAnswerCreateDTO = dto.correctAnswerCreateDTO();
+        if (correctAnswerCreateDTO != null) {
+            CorrectAnswer correctAnswer = new CorrectAnswer(dto.correctAnswerCreateDTO().correctAnswer());
+            correctAnswer.setVariantOfAnswer(correctAnswerCreateDTO.variantOfAnswer());
+
+            q.addCorrectAnswer(correctAnswer);
+        }
+
         for (WrongAnswerCreateDTO wrongAnswerCreateDTO : dto.wrongAnswers()) {
             WrongAnswer wr = new WrongAnswer();
             wr.setWrongAnswer(wrongAnswerCreateDTO.answer());

@@ -9,6 +9,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode
 @Builder
 @Entity
 @Table(name = "question")
@@ -24,15 +25,16 @@ public class Question {
     @OneToOne(mappedBy = "question", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private CorrectAnswer correctAnswer;
 
-    public Question(String question) {
-        this.question = question;
-    }
 
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     List<WrongAnswer> wrongAnswers = new ArrayList<>();
 
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     List<UserAnswerStatistics> userAnswerStatistics = new ArrayList<>();
+
+    public Question(String question) {
+        this.question = question;
+    }
 
     public void addWrongAnswer(WrongAnswer wr) {
         wrongAnswers.add(wr);

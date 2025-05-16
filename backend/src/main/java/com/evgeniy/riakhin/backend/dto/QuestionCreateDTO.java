@@ -6,8 +6,7 @@ import java.util.List;
 
 public record QuestionCreateDTO(
         String textQuestion,
-        String textCorrectAnswer,
-        VariantOfAnswer variantOfAnswer,
+        CorrectAnswerCreateDTO correctAnswerCreateDTO,
         List<WrongAnswerCreateDTO> wrongAnswers) {
 
     // todo сделать валидацию

@@ -31,9 +31,21 @@ public class QuestionService {
         return QuestionMapper.toDTO(question);
     }
 
+    @Transactional
     public QuestionResponseDTO saveQuestion(QuestionCreateDTO questionCreateDTO) {
         Question question = QuestionMapper.toEntity(questionCreateDTO);
         questionRepository.save(question);
         return QuestionMapper.toDTO(question);
+    }
+
+    @Transactional
+    public QuestionResponseDTO questionUpdate(Long id, QuestionCreateDTO questionCreateDTO) {
+        Question question = questionRepository.findQuestionById(id)
+                .orElseThrow(() -> new QuestionNotFoundById("Question not found by id: " + id));
+            // todo доделать метод
+        if (!question.getQuestion().equals(questionCreateDTO.textQuestion())) {
+        question.setQuestion(questionCreateDTO.textQuestion());
+        }
+        return null;
     }
 }
