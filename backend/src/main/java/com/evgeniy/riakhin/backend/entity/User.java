@@ -3,6 +3,9 @@ package com.evgeniy.riakhin.backend.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -29,6 +32,21 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    List<UserAnswerStatistics> userAnswerStatistics = new ArrayList<>();
+
     @Version
     Long version;
+
+    public void addUserAnswerStatistic(UserAnswerStatistics userAnswerStat) {
+        this.userAnswerStatistics.add(userAnswerStat);
+        userAnswerStat.setUser(this);
+    }
+
+    public void removeUserAnswerStatistic(UserAnswerStatistics userAnswerStat) {
+        if (userAnswerStat != null) {
+            this.userAnswerStatistics.remove(userAnswerStat);
+            userAnswerStat.setUser(null);
+        }
+    }
 }

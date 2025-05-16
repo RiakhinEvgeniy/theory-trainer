@@ -31,14 +31,17 @@ public class Question {
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     List<WrongAnswer> wrongAnswers = new ArrayList<>();
 
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    List<UserAnswerStatistics> userAnswerStatistics = new ArrayList<>();
+
     public void addWrongAnswer(WrongAnswer wr) {
         wrongAnswers.add(wr);
         wr.setQuestion(this);
     }
 
-    public void removeWrongAnswer(WrongAnswer wr) {
-        wrongAnswers.remove(wr);
-        wr.setQuestion(null);
+    public void removeWrongAnswer(WrongAnswer wrongAnswer) {
+        wrongAnswers.remove(wrongAnswer);
+        wrongAnswer.setQuestion(null);
     }
 
     public void addCorrectAnswer(CorrectAnswer correctAnswer) {
@@ -46,10 +49,22 @@ public class Question {
         correctAnswer.setQuestion(this);
     }
 
-    public void removeCorrectAnswer() {
-        if(correctAnswer != null) {
+    public void removeCorrectAnswer(CorrectAnswer correctAnswer) {
+        if (this.correctAnswer != null) {
             correctAnswer.setQuestion(null);
-            correctAnswer = null;
+            this.correctAnswer = null;
+        }
+    }
+
+    public void addUserAnswerStatistics(UserAnswerStatistics userAnswerStat) {
+        this.userAnswerStatistics.add(userAnswerStat);
+        userAnswerStat.setQuestion(this);
+    }
+
+    public void removeUserAnswerStatistics(UserAnswerStatistics userAnswerStat) {
+        if (userAnswerStat != null) {
+            userAnswerStatistics.remove(userAnswerStat);
+            userAnswerStat.setQuestion(null);
         }
     }
 }

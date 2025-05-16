@@ -1,5 +1,6 @@
 package com.evgeniy.riakhin.backend.service;
 
+import com.evgeniy.riakhin.backend.dto.QuestionCreateDTO;
 import com.evgeniy.riakhin.backend.dto.QuestionResponseDTO;
 import com.evgeniy.riakhin.backend.entity.Question;
 import com.evgeniy.riakhin.backend.exception.QuestionNotFoundById;
@@ -27,6 +28,12 @@ public class QuestionService {
     public QuestionResponseDTO findById(Long id) {
         Question question = questionRepository.findQuestionById(id)
                 .orElseThrow(() -> new QuestionNotFoundById("Question not found by id: " + id));
+        return QuestionMapper.toDTO(question);
+    }
+
+    public QuestionResponseDTO saveQuestion(QuestionCreateDTO questionCreateDTO) {
+        Question question = QuestionMapper.toEntity(questionCreateDTO);
+        questionRepository.save(question);
         return QuestionMapper.toDTO(question);
     }
 }

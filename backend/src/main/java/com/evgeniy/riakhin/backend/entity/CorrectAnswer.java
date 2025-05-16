@@ -27,4 +27,8 @@ public class CorrectAnswer {
     @Column(name = "variant")
     @Enumerated(EnumType.STRING)
     private VariantOfAnswer variantOfAnswer;
+
+    public CorrectAnswer(String correctAnswer) {
+        this.correctAnswer = correctAnswer;
+    }
 }

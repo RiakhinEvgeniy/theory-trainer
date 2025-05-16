@@ -28,4 +28,8 @@ public class WrongAnswer {
     @Enumerated(EnumType.STRING)
     @Column(name = "variant")
     private VariantOfAnswer variantOfAnswer;
+
+    public WrongAnswer(String wrongAnswer) {
+        this.wrongAnswer = wrongAnswer;
+    }
 }

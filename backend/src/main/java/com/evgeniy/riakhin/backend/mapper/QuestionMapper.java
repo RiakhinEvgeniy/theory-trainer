@@ -1,19 +1,16 @@
 package com.evgeniy.riakhin.backend.mapper;
 
-import com.evgeniy.riakhin.backend.dto.CorrectAnswerResponseDTO;
-import com.evgeniy.riakhin.backend.dto.QuestionResponseDTO;
-import com.evgeniy.riakhin.backend.dto.WrongAnswerResponseDTO;
+import com.evgeniy.riakhin.backend.dto.*;
 import com.evgeniy.riakhin.backend.entity.CorrectAnswer;
 import com.evgeniy.riakhin.backend.entity.Question;
+import com.evgeniy.riakhin.backend.entity.WrongAnswer;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class QuestionMapper {
 
     public static QuestionResponseDTO toDTO(Question q) {
         CorrectAnswer correctAnswer = q.getCorrectAnswer();
-        // todo добавить WrongAnswerResponseDTO
         List<WrongAnswerResponseDTO> wrongAnswers = q.getWrongAnswers()
                 .stream()
                 .map(wrongAnswer -> new WrongAnswerResponseDTO(
@@ -32,5 +29,20 @@ public class QuestionMapper {
                 q.getQuestion(),
                 correctAnswerResponseDTO,
                 wrongAnswers);
+    }
+
+    public static Question toEntity(QuestionCreateDTO dto) {
+        Question q = new Question(dto.textQuestion());
+        CorrectAnswer correctAnswer = new CorrectAnswer(dto.textCorrectAnswer());
+        correctAnswer.setVariantOfAnswer(dto.variantOfAnswer());
+        q.addCorrectAnswer(correctAnswer);
+        for (WrongAnswerCreateDTO wrongAnswerCreateDTO : dto.wrongAnswers()) {
+            WrongAnswer wr = new WrongAnswer();
+            wr.setWrongAnswer(wrongAnswerCreateDTO.answer());
+            wr.setVariantOfAnswer(wrongAnswerCreateDTO.variantOfAnswer());
+
+            q.addWrongAnswer(wr);
+        }
+        return q;
     }
 }

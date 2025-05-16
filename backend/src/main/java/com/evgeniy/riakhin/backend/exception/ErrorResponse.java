@@ -1,7 +1,6 @@
 package com.evgeniy.riakhin.backend.exception;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
