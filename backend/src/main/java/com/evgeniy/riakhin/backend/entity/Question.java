@@ -9,7 +9,6 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
 @Builder
 @Entity
 @Table(name = "question")
@@ -51,9 +50,9 @@ public class Question {
         correctAnswer.setQuestion(this);
     }
 
-    public void removeCorrectAnswer(CorrectAnswer correctAnswer) {
+    public void removeCorrectAnswer() {
         if (this.correctAnswer != null) {
-            correctAnswer.setQuestion(null);
+            this.correctAnswer.setQuestion(null);
             this.correctAnswer = null;
         }
     }

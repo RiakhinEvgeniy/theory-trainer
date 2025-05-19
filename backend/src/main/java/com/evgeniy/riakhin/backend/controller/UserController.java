@@ -5,6 +5,7 @@ import com.evgeniy.riakhin.backend.dto.UserResponseDTO;
 import com.evgeniy.riakhin.backend.entity.User;
 import com.evgeniy.riakhin.backend.repository.UserRepository;
 import com.evgeniy.riakhin.backend.service.UserService;
+import com.evgeniy.riakhin.backend.util.NamePath;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +15,7 @@ import java.util.List;
 
 @Data
 @RestController
-@RequestMapping("/users")
+@RequestMapping(NamePath.API_USERS)
 public class UserController {
     private final UserService userService;
     private final UserRepository userRepository;
@@ -24,13 +25,13 @@ public class UserController {
         return userService.findAllUsers();
     }
 
-    @GetMapping("/name/{name}")
+    @GetMapping(NamePath.NAME)
     public ResponseEntity<UserResponseDTO> getUserByName(@PathVariable("name") String name) {
         UserResponseDTO userResponseDTO = userService.findUserByName(name);
         return new ResponseEntity<>(userResponseDTO, HttpStatus.OK);
     }
 
-    @GetMapping("id/{id}")
+    @GetMapping(NamePath.ID_PATH)
     public ResponseEntity<UserResponseDTO> getUserById(@PathVariable("id") Long id) {
         UserResponseDTO userResponseDTO = userService.findUserById(id);
         return new ResponseEntity<>(userResponseDTO, HttpStatus.OK);
@@ -42,13 +43,13 @@ public class UserController {
         return new ResponseEntity<>(userResponseDTO, HttpStatus.CREATED);
     }
 
-    @PutMapping("/id/{id}")
+    @PutMapping(NamePath.ID_PATH)
     public ResponseEntity<UserResponseDTO> updateUser(@PathVariable Long id, @RequestBody UserCreateDTO userCreateDTO) {
         UserResponseDTO userResponseDTO = userService.updateUser(id, userCreateDTO);
         return new ResponseEntity<>(userResponseDTO, HttpStatus.OK);
     }
 
-    @DeleteMapping("/id/{id}")
+    @DeleteMapping(NamePath.ID_PATH)
     public ResponseEntity<String> deleteUserById(@PathVariable("id") Long id) {
         userService.deleteUser(id);
         return ResponseEntity.ok("User deleted successfully with id: " + id);

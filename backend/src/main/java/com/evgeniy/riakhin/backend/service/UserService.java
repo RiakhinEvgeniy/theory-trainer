@@ -8,6 +8,7 @@ import com.evgeniy.riakhin.backend.exception.UserNotFoundById;
 import com.evgeniy.riakhin.backend.exception.UserNotFoundByName;
 import com.evgeniy.riakhin.backend.mapper.UserMapper;
 import com.evgeniy.riakhin.backend.repository.UserRepository;
+import com.evgeniy.riakhin.backend.util.NameException;
 import lombok.Data;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
@@ -30,7 +31,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public UserResponseDTO findUserByName(String name) {
         User user = userRepository.findByUserName(name)
-                .orElseThrow(() -> new UserNotFoundByName("User not found by name: " + name));
+                .orElseThrow(() -> new UserNotFoundByName(NameException.USER_NOT_FOUND_BY_NAME + name));
         System.out.println(user.getName());
         return userMapper.toDTO(user);
     }
@@ -38,7 +39,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public UserResponseDTO findUserById(Long id) {
         User user = userRepository.findUserById(id)
-                .orElseThrow(() -> new UserNotFoundById("User not found by id: " + id));
+                .orElseThrow(() -> new UserNotFoundById(NameException.USER_NOT_FOUND_BY_ID + id));
         return userMapper.toDTO(user);
     }
 
@@ -53,19 +54,19 @@ public class UserService {
     public UserResponseDTO updateUser(Long id, UserCreateDTO userCreateDTO) {
         try {
             User user = userRepository.findUserById(id)
-                    .orElseThrow(() -> new UserNotFoundById("User not found for updating by id: " + id));
+                    .orElseThrow(() -> new UserNotFoundById(NameException.USER_NOT_FOUND_FOR_UPDATING + id));
             updateFieldsOfUser(user, userCreateDTO);
             userRepository.save(user);
             return userMapper.toDTO(user);
         } catch (ObjectOptimisticLockingFailureException ex) {
-            throw new ConcurrentModificationException("User was modified by another thread" + ex);
+            throw new ConcurrentModificationException(NameException.USER_MODIFIED_BY_ANOTHER_THREAD + ex);
         }
     }
 
     @Transactional(timeout = 3, rollbackFor = UserDeleteException.class)
     public void deleteUser(Long id) {
         if (!userRepository.existsById(id)) {
-            throw new UserDeleteException("User not found for deleting by id: " + id);
+            throw new UserDeleteException(NameException.USER_NOT_FOUND_FOR_DELETING + id);
         }
         userRepository.deleteById(id);
     }

@@ -20,7 +20,7 @@ public class CorrectAnswer {
     @Column(name = "answer")
     private String correctAnswer;
 
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @OneToOne(fetch = FetchType.LAZY, optional = false, orphanRemoval = true)
     @JoinColumn(name = "question_id", referencedColumnName = "id", nullable = false, unique = true)
     private Question question;
 
