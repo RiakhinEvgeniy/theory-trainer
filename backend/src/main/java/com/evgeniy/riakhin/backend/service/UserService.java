@@ -10,11 +10,9 @@ import com.evgeniy.riakhin.backend.mapper.UserMapper;
 import com.evgeniy.riakhin.backend.repository.UserRepository;
 import com.evgeniy.riakhin.backend.util.NameException;
 import lombok.Data;
-import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ConcurrentModificationException;
 import java.util.List;
 
 @Data
@@ -52,15 +50,11 @@ public class UserService {
 
     @Transactional
     public UserResponseDTO updateUser(Long id, UserCreateDTO userCreateDTO) {
-        try {
-            User user = userRepository.findUserById(id)
-                    .orElseThrow(() -> new UserNotFoundById(NameException.USER_NOT_FOUND_FOR_UPDATING + id));
-            updateFieldsOfUser(user, userCreateDTO);
-            userRepository.save(user);
-            return userMapper.toDTO(user);
-        } catch (ObjectOptimisticLockingFailureException ex) {
-            throw new ConcurrentModificationException(NameException.USER_MODIFIED_BY_ANOTHER_THREAD + ex);
-        }
+        User user = userRepository.findUserById(id)
+                .orElseThrow(() -> new UserNotFoundById(NameException.USER_NOT_FOUND_FOR_UPDATING + id));
+        updateFieldsOfUser(user, userCreateDTO);
+        userRepository.save(user);
+        return userMapper.toDTO(user);
     }
 
     @Transactional(timeout = 3, rollbackFor = UserDeleteException.class)

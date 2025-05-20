@@ -11,7 +11,6 @@ import com.evgeniy.riakhin.backend.exception.QuestionNotFoundById;
 import com.evgeniy.riakhin.backend.mapper.QuestionMapper;
 import com.evgeniy.riakhin.backend.repository.QuestionRepository;
 import com.evgeniy.riakhin.backend.util.NameException;
-import jakarta.persistence.EntityManager;
 import lombok.Data;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -56,9 +55,15 @@ public class QuestionService {
         return QuestionMapper.toDTO(question);
     }
 
-    private void updateQuestionFields(QuestionCreateDTO questionCreateDTO, Question question) {
+    @Transactional
+    public void deleteQuestion(Long id) {
+        if (!questionRepository.existsById(id)) {
+            throw new QuestionNotFoundById(NameException.QUESTION_NOT_FOUND_BY_ID + id);
+        }
+        questionRepository.deleteById(id);
+    }
 
-//        question.removeCorrectAnswer();
+    private void updateQuestionFields(QuestionCreateDTO questionCreateDTO, Question question) {
 
         if (!Objects.equals(question.getQuestion(), questionCreateDTO.textQuestion())) {
             question.setQuestion(questionCreateDTO.textQuestion());

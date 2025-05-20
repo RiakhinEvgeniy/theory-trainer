@@ -5,6 +5,7 @@ import com.evgeniy.riakhin.backend.dto.UserResponseDTO;
 import com.evgeniy.riakhin.backend.entity.User;
 import com.evgeniy.riakhin.backend.repository.UserRepository;
 import com.evgeniy.riakhin.backend.service.UserService;
+import com.evgeniy.riakhin.backend.util.NameMessage;
 import com.evgeniy.riakhin.backend.util.NamePath;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
@@ -52,6 +53,6 @@ public class UserController {
     @DeleteMapping(NamePath.ID_PATH)
     public ResponseEntity<String> deleteUserById(@PathVariable("id") Long id) {
         userService.deleteUser(id);
-        return ResponseEntity.ok("User deleted successfully with id: " + id);
+        return ResponseEntity.ok(NameMessage.DELETED_SUCCESSFUL + id);
     }
 }

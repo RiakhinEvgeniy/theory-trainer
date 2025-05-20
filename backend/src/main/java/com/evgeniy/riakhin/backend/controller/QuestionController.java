@@ -3,6 +3,7 @@ package com.evgeniy.riakhin.backend.controller;
 import com.evgeniy.riakhin.backend.dto.QuestionCreateDTO;
 import com.evgeniy.riakhin.backend.dto.QuestionResponseDTO;
 import com.evgeniy.riakhin.backend.service.QuestionService;
+import com.evgeniy.riakhin.backend.util.NameMessage;
 import com.evgeniy.riakhin.backend.util.NamePath;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
@@ -30,7 +31,12 @@ public class QuestionController {
         return new ResponseEntity<>(questionResponseDTO, HttpStatus.OK);
     }
 
-    // TODO добавить методы для создания, удаления, обновления вопросов
+    @DeleteMapping(NamePath.ID_PATH)
+    public ResponseEntity<String> deleteQuestionById(@PathVariable(name = "id") Long id) {
+        questionService.deleteQuestion(id);
+        return ResponseEntity.ok(NameMessage.DELETED_SUCCESSFUL + id);
+    }
+
     @PostMapping()
     public ResponseEntity<QuestionResponseDTO> createQuestion(@RequestBody QuestionCreateDTO questionCreateDTO) {
         QuestionResponseDTO questionResponseDTO = questionService.saveQuestion(questionCreateDTO);
