@@ -1,0 +1,9 @@
+.user-card {
+    display: flex;
+    justify-content: space-around;
+    color: red;
+    font-size: 16px;
+    font-weight: 900;
+    width: 1000px;
+    background-color: bisque;
+}

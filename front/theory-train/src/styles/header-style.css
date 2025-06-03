@@ -1,0 +1,9 @@
+.my-header{
+  background-color: red;
+  display: flex;
+  width: 1300px;
+  justify-content: space-around;
+  font-size: larger;
+  font-weight: bolder;
+  color: white;
+}
