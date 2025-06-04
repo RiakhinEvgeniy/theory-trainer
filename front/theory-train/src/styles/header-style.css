@@ -1,9 +1,12 @@
 .my-header{
-  background-color: red;
+  background-color: inherit;
+  border: 1px solid white;
+  border-radius: 7px;
   display: flex;
-  width: 1300px;
+  width: 1320px;
   justify-content: space-around;
   font-size: larger;
   font-weight: bolder;
   color: white;
+  margin: 0px 1rem;
 }

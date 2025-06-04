@@ -1,30 +1,28 @@
-import { useState } from 'react'
 import './styles/user-style.css'
 import './App.css'
 import Header from './components/Header'
-import ButtonTest from './components/Button'
+import ButtonTest from './components/buttons/Button'
+import Question from './components/Question'
+import Answer from './components/Answer'
+import GettingNextPrevUser from './components/hooks/GettingNextPrevUser'
 
 function App() {
-  const [nextUser, setNextUser] = useState<number>(3);
 
-  function getNextUser() {
-    setNextUser(() => nextUser + 1);
-    console.log(nextUser);
-    return nextUser;
-  }
-
-  function getPreviousUser() {
-    setNextUser(() => nextUser - 1);
-    console.log(nextUser);
-    return nextUser;
-  }
+  const { nextUser, prevUser, getUserById } = GettingNextPrevUser();
 
   return (
     <>
-      <Header userId={nextUser}></Header>
+      <Header userId={getUserById}></Header>
+      <Question></Question>
+      <section>
+        <Answer id="1"></Answer>
+        <Answer id="2"></Answer>
+        <Answer id="3"></Answer>
+      </section>
+
       <div>
-        <ButtonTest buttonText='NEXT' getNextUser={getNextUser}></ButtonTest>
-        <ButtonTest buttonText='PREV' getNextUser={getPreviousUser}></ButtonTest>
+        <ButtonTest buttonText='NEXT' getUser={nextUser}></ButtonTest>
+        <ButtonTest buttonText='PREV' getUser={prevUser}></ButtonTest>
       </div>
     </>
   )
