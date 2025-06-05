@@ -1,13 +1,12 @@
-import {} from '../styles/question-answer.css'
+import { } from '../styles/question-answer.css'
+import type { QuestionText } from '../types/QuestionText'
 
-function Question() {
+function Question({ questionText }: QuestionText) {
     return (
         <>
             <div className="question">
                 <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-                    Vel ratione quam in voluptates, itaque quae recusandae similique officia, 
-                    praesentium officiis incidunt fugiat, rem laboriosam. Rerum voluptatibus nam iste tenetur quia.
+                    {questionText}
                 </p>
             </div>
 

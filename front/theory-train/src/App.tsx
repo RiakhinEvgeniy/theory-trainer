@@ -6,6 +6,8 @@ import Question from './components/Question'
 import Answer from './components/Answer'
 import GettingNextPrevUser from './components/hooks/GettingNextPrevUser'
 
+
+
 function App() {
 
   const { nextUser, prevUser, getUserById } = GettingNextPrevUser();
@@ -13,7 +15,7 @@ function App() {
   return (
     <>
       <Header userId={getUserById}></Header>
-      <Question></Question>
+      <Question questionText="Which company developed Java?"></Question>
       <section>
         <Answer id="1"></Answer>
         <Answer id="2"></Answer>
@@ -21,8 +23,8 @@ function App() {
       </section>
 
       <div>
-        <ButtonTest buttonText='NEXT' getUser={nextUser}></ButtonTest>
-        <ButtonTest buttonText='PREV' getUser={prevUser}></ButtonTest>
+        <ButtonTest buttonText='NEXTUSER' getUser={nextUser}></ButtonTest>
+        <ButtonTest buttonText='PREVUSER' getUser={prevUser}></ButtonTest>
       </div>
     </>
   )
