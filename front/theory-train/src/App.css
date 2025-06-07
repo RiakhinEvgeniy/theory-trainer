@@ -40,3 +40,10 @@
 .read-the-docs {
   color: #888;
 }
+
+.btn-in-app {
+  display: flex;
+  width: 800px;
+  justify-content: space-around;
+  border: 1px solid lightgray;
+}

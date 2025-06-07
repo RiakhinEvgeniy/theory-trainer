@@ -13,6 +13,7 @@ interface AnswerProps {
 function Answer({ answer, groupNameOfRadioBtn, onSelected, isSelected }: AnswerProps) {
     const handleRadioAnswer = (_event: React.ChangeEvent<HTMLInputElement>) => {
         onSelected(answer.id);
+        
     }
     return (
         <>

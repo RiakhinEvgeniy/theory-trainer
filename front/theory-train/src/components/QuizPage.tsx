@@ -20,8 +20,7 @@ function QuizPage({ idQuestion }: QuestionIdQuizPageProps) {
     const [messageError, setMessageError] = useState<MessageErrorFromServer | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [selectedAnswerId, setSelectedAnswerId] = useState<number | null>(null);
-
-    console.log('Перед useEffect', idQuestion);
+    const [isCorrectAnswer, setIsCorrectAnswer] = useState<boolean | null>(null);
 
     const shuffledAnswers = useMemo(() => {
         if (!question) {
@@ -50,6 +49,7 @@ function QuizPage({ idQuestion }: QuestionIdQuizPageProps) {
         setMessageError(null);
         // setIsLoading(true);
         setSelectedAnswerId(null);
+        setIsCorrectAnswer(null);
 
         async function fetchQuestionById(): Promise<void> {
             try {
@@ -103,6 +103,13 @@ function QuizPage({ idQuestion }: QuestionIdQuizPageProps) {
         setSelectedAnswerId(id);
         console.log(`Установлен ID для ответа ${id}`);
         // added logic for checking answer
+        if (id === question?.correctResponseDTO.id) {
+            setIsCorrectAnswer(true);
+            console.log('Правильно!!!');
+        } else {
+            setIsCorrectAnswer(false);
+            console.log('Попробуйте еще раз(((');
+        }
     }
 
     if (isLoading) {
@@ -125,7 +132,7 @@ function QuizPage({ idQuestion }: QuestionIdQuizPageProps) {
             <div className="quiz-page">Вопрос не найден</div>
         )
     };
-    
+
     return (
         <>
             <Question textQuestion={question.questionText}></Question>
@@ -140,6 +147,16 @@ function QuizPage({ idQuestion }: QuestionIdQuizPageProps) {
                     />
                 ))}
             </div>
+
+        {isCorrectAnswer !== null && (
+            <div className="answer" style={{ marginTop: '20px', fontSize: '20px', fontWeight: 'bold' }}>
+                {isCorrectAnswer ? (
+                    <span style={{ color: 'green' }}>Ответ ВЕРНЫЙ!</span>
+                ) : (
+                    <span style={{ color: 'red' }}>Ответ НЕВЕРНЫЙ.</span>
+                )}
+            </div>
+        )}
         </>
     )
 }
