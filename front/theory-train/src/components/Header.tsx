@@ -2,7 +2,7 @@ import { useState, useEffect } from "react"
 import type { User } from '../types/User'
 import "../styles/header-style.css"
 
-interface HeaderProps {
+interface UserIdHeaderProps {
     userId: number
 }
 
@@ -13,7 +13,7 @@ interface MessageErrorFromServer {
     status: number;
 }
 
-export default function Header({ userId }: HeaderProps) {
+export default function Header({ userId }: UserIdHeaderProps) {
     const [user, setUser] = useState<User | null>(null);
     const [messageError, setMessageError] = useState<MessageErrorFromServer | null>(null);
 
@@ -25,20 +25,21 @@ export default function Header({ userId }: HeaderProps) {
         const signal = abortController.signal;
 
         async function getUserById(): Promise<void> {
-
-            const response: Response = await fetch(`http://localhost:8080/api/users/id/${userId}`, { signal });
-
             try {
 
+                const response: Response = await fetch(`http://localhost:8080/api/users/id/${userId}`, { signal });
+
                 if (!response.ok) {
-                    const objErr: MessageErrorFromServer = await response.json();
-                    setMessageError(objErr);
+                    const objError: MessageErrorFromServer = await response.json();
+                    setMessageError(objError);
+                    console.error(`HTTP error! status: ${response.status}`, objError);
                     return;
                 }
 
                 const dataUser: User = await response.json();
 
                 setUser(dataUser);
+
             } catch (error: any) {
                 if (error.name === 'AbortError') {
                     console.log('[Header] Запрос пользователя был отменен.');
@@ -51,10 +52,6 @@ export default function Header({ userId }: HeaderProps) {
         }
 
         getUserById();
-
-        // console.log('Log of user', user);
-        // console.log('Log of messageError', messageError);
-
 
         return () => {
             console.log(`[Header Cleanup] Очистка эффекта для userId: ${userId}`);

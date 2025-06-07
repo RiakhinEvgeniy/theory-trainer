@@ -10,7 +10,6 @@ function getNextPrevUserById() {
 
     const prevUser = function getPreviousUser() {
         setNextUser(() => getUserById - 1);
-        // // console.log(getUserById);
         return getUserById;
     }
 

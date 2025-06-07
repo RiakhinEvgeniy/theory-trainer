@@ -1,20 +1,34 @@
 import { } from '../styles/question-answer.css'
 import RadioButton from './buttons/RadioButton'
+import type { AnswerOption } from '../types/QuestionData'
+import type React from 'react';
 
-interface ID {
-    id: string
+interface AnswerProps {
+    answer: AnswerOption;
+    groupNameOfRadioBtn: string;
+    onSelected: (selectedAnswerId: number) => void;
+    isSelected: boolean;
 }
 
-function Answer({ id }: ID) {
+function Answer({ answer, groupNameOfRadioBtn, onSelected, isSelected }: AnswerProps) {
+    const handleRadioAnswer = (_event: React.ChangeEvent<HTMLInputElement>) => {
+        onSelected(answer.id);
+    }
     return (
         <>
             <div className="answer">
-                <RadioButton name="1" id={id}></RadioButton>
-                <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Vel ratione quam in voluptates, itaque quae recusandae similique officia,
-                    praesentium officiis incidunt fugiat, rem laboriosam. Rerum voluptatibus nam iste tenetur quia.
-                </p>
+                <RadioButton
+                    name={groupNameOfRadioBtn}
+                    id={`answer-${answer.id}`}
+                    checked={isSelected}
+                    onSelected={handleRadioAnswer}
+                ></RadioButton>
+                <label htmlFor={`answer-${answer.id}`}>
+                    <p>
+                        {answer.text}
+                    </p>
+                </label>
+
             </div>
         </>
     )

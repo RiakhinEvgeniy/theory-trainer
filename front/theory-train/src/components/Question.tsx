@@ -1,12 +1,15 @@
 import { } from '../styles/question-answer.css'
-import type { QuestionText } from '../types/QuestionText'
 
-function Question({ questionText }: QuestionText) {
+interface QuestionProps {
+    textQuestion: string;
+}
+
+function Question({ textQuestion }: QuestionProps) {
     return (
         <>
             <div className="question">
                 <p>
-                    {questionText}
+                    {textQuestion}
                 </p>
             </div>
 
