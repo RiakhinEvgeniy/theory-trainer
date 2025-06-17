@@ -2,7 +2,6 @@ package com.evgeniy.riakhin.backend.controller;
 
 import com.evgeniy.riakhin.backend.dto.UserCreateDTO;
 import com.evgeniy.riakhin.backend.dto.UserResponseDTO;
-import com.evgeniy.riakhin.backend.entity.User;
 import com.evgeniy.riakhin.backend.repository.UserRepository;
 import com.evgeniy.riakhin.backend.service.UserService;
 import com.evgeniy.riakhin.backend.util.NameMessage;
@@ -23,7 +22,7 @@ public class UserController {
     private final UserRepository userRepository;
 
     @GetMapping
-    public List<User> getUsers() {
+    public List<UserResponseDTO> getUsers() {
         return userService.findAllUsers();
     }
 

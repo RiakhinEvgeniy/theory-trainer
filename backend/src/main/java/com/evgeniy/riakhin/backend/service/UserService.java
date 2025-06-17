@@ -3,9 +3,7 @@ package com.evgeniy.riakhin.backend.service;
 import com.evgeniy.riakhin.backend.dto.UserCreateDTO;
 import com.evgeniy.riakhin.backend.dto.UserResponseDTO;
 import com.evgeniy.riakhin.backend.entity.User;
-import com.evgeniy.riakhin.backend.exception.UserDeleteException;
-import com.evgeniy.riakhin.backend.exception.UserNotFoundById;
-import com.evgeniy.riakhin.backend.exception.UserNotFoundByName;
+import com.evgeniy.riakhin.backend.exception.*;
 import com.evgeniy.riakhin.backend.mapper.UserMapper;
 import com.evgeniy.riakhin.backend.repository.UserRepository;
 import com.evgeniy.riakhin.backend.util.NameException;
@@ -13,6 +11,7 @@ import lombok.Data;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -22,13 +21,21 @@ public class UserService {
     private final UserMapper userMapper;
 
     @Transactional(readOnly = true)
-    public List<User> findAllUsers() {
-        return userRepository.getAllUsers();
+    public List<UserResponseDTO> findAllUsers() {
+        List<User> allUsers = userRepository.getAllUsers();
+        if (allUsers.isEmpty()) {
+            throw new UserNotFound(NameException.USERS_NOT_FOUND_IN_DB);
+        }
+        List<UserResponseDTO> userResponseDTOS = new ArrayList<>(allUsers.size());
+        for (User allUser : allUsers) {
+            userResponseDTOS.add(userMapper.toDTO(allUser));
+        }
+        return userResponseDTOS;
     }
 
     @Transactional(readOnly = true)
     public UserResponseDTO findUserByName(String name) {
-        User user = userRepository.findByUserName(name)
+        User user = userRepository.findUserByName(name)
                 .orElseThrow(() -> new UserNotFoundByName(NameException.USER_NOT_FOUND_BY_NAME + name));
         System.out.println(user.getName());
         return userMapper.toDTO(user);
@@ -43,9 +50,24 @@ public class UserService {
 
     @Transactional
     public UserResponseDTO saveUser(UserCreateDTO userCreateDTO) {
+        if (userCreateDTO == null) {
+            throw new UserCreateDTOException(NameException.USER_CREATE_DTO);
+        }
+
         User user = userMapper.toEntity(userCreateDTO);
-        userRepository.save(user);
-        return userMapper.toDTO(user);
+
+        if (user == null) {
+            throw new UserMapperException(NameException.USER_MAPPING_FAILED);
+        }
+
+        User saveUser = userRepository.save(user);
+        UserResponseDTO userResponseDTO = userMapper.toDTO(saveUser);
+
+        if (userResponseDTO == null) {
+            throw new UserMapperException(NameException.FAILED_TO_MAP_SAVED_USER_TO_DTO);
+        }
+
+        return userResponseDTO;
     }
 
     @Transactional

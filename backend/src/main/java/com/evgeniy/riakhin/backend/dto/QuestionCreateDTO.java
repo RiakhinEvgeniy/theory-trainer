@@ -1,6 +1,5 @@
 package com.evgeniy.riakhin.backend.dto;
 
-import com.evgeniy.riakhin.backend.entity.VariantOfAnswer;
 
 import java.util.List;
 

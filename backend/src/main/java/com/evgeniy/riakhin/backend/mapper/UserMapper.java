@@ -5,8 +5,9 @@ import com.evgeniy.riakhin.backend.dto.UserResponseDTO;
 import com.evgeniy.riakhin.backend.entity.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.NullValueCheckStrategy;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
 public interface UserMapper {
 
     @Mapping(source = "name", target = "name")

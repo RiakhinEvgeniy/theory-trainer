@@ -12,6 +12,27 @@ import java.util.ConcurrentModificationException;
 
 @ControllerAdvice
 public class HandlerExceptionController {
+
+    @ExceptionHandler(UserMapperException.class)
+    public ResponseEntity<ErrorResponse> handleUserMapperException(
+            UserMapperException ex, HttpServletRequest req) {
+        ErrorResponse errorResponse = createErrorResponse(ex, req, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UserCreateDTOException.class)
+    public ResponseEntity<ErrorResponse> handleUserCreateDTOException(
+            UserCreateDTOException ex, HttpServletRequest req) {
+        ErrorResponse errorResponse = createErrorResponse(ex, req, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UserNotFound.class)
+    public ResponseEntity<ErrorResponse> handleUserNotFound(UserNotFound ex, HttpServletRequest req) {
+        ErrorResponse errorResponse = createErrorResponse(ex, req, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(UserNotFoundById.class)
     public ResponseEntity<ErrorResponse> handleUserNotFoundById(UserNotFoundById ex, HttpServletRequest req) {
         ErrorResponse errorResponse = createErrorResponse(ex, req, HttpStatus.NOT_FOUND);
