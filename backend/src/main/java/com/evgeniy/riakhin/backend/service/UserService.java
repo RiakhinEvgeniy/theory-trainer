@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Data
 @Service
@@ -88,16 +89,26 @@ public class UserService {
     }
 
     private void updateFieldsOfUser(User user, UserCreateDTO userCreateDTO) {
-        if (!userCreateDTO.getName().equals(user.getName())) {
+
+        if (userCreateDTO.getName() != null
+                && !userCreateDTO.getName().isEmpty()
+                && !Objects.equals(userCreateDTO.getName(), user.getName())) {
             user.setName(userCreateDTO.getName());
         }
-        if (!userCreateDTO.getPassword().equals(user.getPassword())) {
-            user.setPassword(userCreateDTO.getPassword());
-        }
-        if (!userCreateDTO.getEmail().equals(user.getEmail())) {
+
+        if (userCreateDTO.getEmail() != null
+                && !userCreateDTO.getEmail().isEmpty()
+                && !Objects.equals(userCreateDTO.getEmail(), user.getEmail())) {
             user.setEmail(userCreateDTO.getEmail());
         }
-        if (!userCreateDTO.getRole().toString().equals(user.getRole().toString())) {
+
+        if (userCreateDTO.getPassword() != null
+                && !userCreateDTO.getPassword().isEmpty()
+                && !Objects.equals(userCreateDTO.getPassword(), user.getPassword())) {
+            user.setPassword(userCreateDTO.getPassword());
+        }
+
+        if (userCreateDTO.getRole() != null && !Objects.equals(userCreateDTO.getRole(), user.getRole())) {
             user.setRole(userCreateDTO.getRole());
         }
     }
