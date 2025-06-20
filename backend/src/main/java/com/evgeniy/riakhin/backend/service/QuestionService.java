@@ -41,7 +41,7 @@ public class QuestionService {
     @Transactional
     public QuestionResponseDTO saveQuestion(QuestionCreateDTO questionCreateDTO) {
         Question question = QuestionMapper.toEntity(questionCreateDTO);
-        questionRepository.save(question);
+        question = questionRepository.save(question);
         return QuestionMapper.toDTO(question);
     }
 
@@ -51,7 +51,7 @@ public class QuestionService {
                 .orElseThrow(() -> new QuestionNotFoundById(NameException.QUESTION_NOT_FOUND_BY_ID + id));
         updateQuestionFields(questionCreateDTO, question);
 
-        questionRepository.save(question);
+        question = questionRepository.save(question);
         return QuestionMapper.toDTO(question);
     }
 

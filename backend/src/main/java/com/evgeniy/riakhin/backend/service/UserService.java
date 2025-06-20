@@ -38,7 +38,6 @@ public class UserService {
     public UserResponseDTO findUserByName(String name) {
         User user = userRepository.findUserByName(name)
                 .orElseThrow(() -> new UserNotFoundByName(NameException.USER_NOT_FOUND_BY_NAME + name));
-        System.out.println(user.getName());
         return userMapper.toDTO(user);
     }
 

@@ -42,7 +42,6 @@ class UserServiceTest {
     private UserCreateDTO newCreateDTO; // DTO для обновления
     private UserResponseDTO expectedResponseDTO; // Ожидаемый DTO
 
-    // todo added method setUp for initialization
     @BeforeEach
     void setUp() {
         evgeniyUser = User.builder()
@@ -188,7 +187,7 @@ class UserServiceTest {
 
     @Test
     void shouldThrowExceptionWhenUserNotFoundById() {
-        long notExistingUserId = 9999L;
+        Long notExistingUserId = 9999L;
         Mockito.when(userRepository.findUserById(notExistingUserId)).thenReturn(Optional.empty());
         UserNotFoundById thrown = assertThrows(
                 UserNotFoundById.class,
@@ -248,7 +247,7 @@ class UserServiceTest {
 
     @Test
     void updateUser() {
-        long userId = evgeniyUser.getId();
+        Long userId = evgeniyUser.getId();
 
         UserCreateDTO newCreateDTO = new UserCreateDTO();
         newCreateDTO.setName("Natalia");
@@ -399,7 +398,7 @@ class UserServiceTest {
 
     @Test
     void deleteUserShouldDeleteExistingUserSuccessfully() {
-        long existsId = 1L;
+        Long existsId = 1L;
         Mockito.when(userRepository.existsById(existsId)).thenReturn(true);
         Mockito.doNothing().when(userRepository).deleteById(existsId);
         assertDoesNotThrow(() -> userService.deleteUser(existsId));
@@ -408,7 +407,7 @@ class UserServiceTest {
 
     @Test
     void deleteUser_ShouldThrowException_WhenUserDoesNotExist() {
-        long notExistsId = -2L;
+        Long notExistsId = -2L;
         Mockito.when(userRepository.existsById(notExistsId)).thenReturn(false);
         UserDeleteException thrownException = assertThrows(
                 UserDeleteException.class,
