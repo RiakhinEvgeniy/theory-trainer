@@ -21,6 +21,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -213,7 +214,8 @@ class QuestionServiceTest {
     void questionUpdateShouldUpdateAllFieldsSuccessfully() {
         Long existingQuestionId = existingQuestion.getId();
         Mockito.when(questionRepository.findQuestionById(existingQuestionId)).thenReturn(Optional.of(existingQuestion));
-        Mockito.when(questionRepository.save(Mockito.any(Question.class))).thenAnswer(invocation -> invocation.<Question>getArgument(0));
+        Mockito.when(questionRepository.save(Mockito.any(Question.class)))
+                .thenAnswer(invocation -> invocation.<Question>getArgument(0));
 
         QuestionResponseDTO actualResponseDTO = questionService.questionUpdate(existingQuestionId, updateQuestionCreateDTO);
 
@@ -240,10 +242,12 @@ class QuestionServiceTest {
                 updateQuestionCreateDTO.correctAnswerCreateDTO().variantOfAnswer(),
                 captureQuestion.getCorrectAnswer().getVariantOfAnswer(),
                 "Variant of answer should be updated");
-        assertEquals(captureQuestion, captureQuestion.getCorrectAnswer().getQuestion(), "Correct answer should be updated");
+        assertEquals(captureQuestion, captureQuestion.getCorrectAnswer().getQuestion(),
+                "Correct answer should be updated");
 
         assertNotNull(captureQuestion.getWrongAnswers(), "Wrong answers should not be null");
-        assertEquals(updateQuestionCreateDTO.wrongAnswers().size(), captureQuestion.getWrongAnswers().size(), "Number of wrong answers should match");
+        assertEquals(updateQuestionCreateDTO.wrongAnswers().size(),
+                captureQuestion.getWrongAnswers().size(), "Number of wrong answers should match");
 
         assertTrue(
                 captureQuestion.getWrongAnswers()
@@ -261,7 +265,8 @@ class QuestionServiceTest {
                         .anyMatch(wa -> wa.getWrongAnswer()
                                 .equals(updateQuestionCreateDTO.wrongAnswers().get(1).answer())
                                 &&
-                                wa.getVariantOfAnswer().equals(updateQuestionCreateDTO.wrongAnswers().get(1).variantOfAnswer())),
+                                wa.getVariantOfAnswer()
+                                        .equals(updateQuestionCreateDTO.wrongAnswers().get(1).variantOfAnswer())),
                 "Second new wrong answer should be present");
 
         captureQuestion.getWrongAnswers()
@@ -270,6 +275,132 @@ class QuestionServiceTest {
     }
 
     @Test
-    void deleteQuestion() {
+    void questionUpdateShouldUpdateOnlyAnswersWhenQuestionTextIsSame() {
+        Long existingQuestionId = existingQuestion.getId();
+
+        QuestionCreateDTO partialUpdateDTO = new QuestionCreateDTO(
+                existingQuestion.getQuestion(),
+                new CorrectAnswerCreateDTO("Updated correct answer for partial", VariantOfAnswer.CORRECT),
+                Arrays.asList(new WrongAnswerCreateDTO("New wrong for partial 1", VariantOfAnswer.INCORRECT),
+                        new WrongAnswerCreateDTO("New wrong for partial 2", VariantOfAnswer.INCORRECT))
+        );
+
+        Mockito.when(questionRepository.findQuestionById(existingQuestionId)).thenReturn(Optional.of(existingQuestion));
+        Mockito.when(questionRepository.save(Mockito.any(Question.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        questionService.questionUpdate(existingQuestionId, partialUpdateDTO);
+
+        ArgumentCaptor<Question> questionCaptor = ArgumentCaptor.forClass(Question.class);
+        Mockito.verify(questionRepository, Mockito.times(1)).save(questionCaptor.capture());
+
+        Question captureQuestion = questionCaptor.getValue();
+        assertNotNull(captureQuestion, "The question isn't null");
+
+        assertEquals(captureQuestion.getQuestion(), existingQuestion.getQuestion());
+
+        assertNotNull(captureQuestion.getCorrectAnswer(), "The question isn't null");
+        assertEquals(existingQuestion.getCorrectAnswer(), captureQuestion.getCorrectAnswer());
+
+        assertNotNull(captureQuestion.getWrongAnswers(), "Wrong answers should not be null");
+        assertEquals(partialUpdateDTO.correctAnswerCreateDTO().correctAnswer(),
+                captureQuestion.getCorrectAnswer().getCorrectAnswer());
+
+        assertEquals(partialUpdateDTO.wrongAnswers().size(), captureQuestion.getWrongAnswers().size(),
+                "Number of wrong answers should match");
+
+        assertEquals(2, captureQuestion.getWrongAnswers().size(), "Wrong answers should be present");
+
+        assertEquals(partialUpdateDTO.wrongAnswers().getFirst().answer(),
+                captureQuestion.getWrongAnswers().getFirst().getWrongAnswer());
+
+        assertEquals(partialUpdateDTO.wrongAnswers().getFirst().variantOfAnswer(),
+                captureQuestion.getWrongAnswers().getFirst().getVariantOfAnswer());
+
+        assertEquals(partialUpdateDTO.wrongAnswers().get(1).answer(),
+                captureQuestion.getWrongAnswers().get(1).getWrongAnswer());
+
+        assertEquals(partialUpdateDTO.wrongAnswers().get(1).variantOfAnswer(),
+                captureQuestion.getWrongAnswers().get(1).getVariantOfAnswer());
+    }
+
+    @Test
+    void questionUpdateShouldKeepCorrectAnswerWhenCorrectAnswerDTOIsNull() {
+        Long existingQuestionId = existingQuestion.getId();
+        QuestionCreateDTO dtoWithNullCorrectAnswerCreate = new QuestionCreateDTO(
+                existingQuestion.getQuestion(),
+                null,
+                Collections.emptyList()
+        );
+        Mockito.when(questionRepository.findQuestionById(existingQuestionId)).thenReturn(Optional.of(existingQuestion));
+        Mockito.when(questionRepository.save(Mockito.any(Question.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        questionService.questionUpdate(existingQuestionId, dtoWithNullCorrectAnswerCreate);
+
+        ArgumentCaptor<Question> questionCaptor = ArgumentCaptor.forClass(Question.class);
+        Mockito.verify(questionRepository, Mockito.times(1)).save(questionCaptor.capture());
+
+        Question captureQuestion = questionCaptor.getValue();
+        assertNotNull(captureQuestion);
+
+        assertEquals(dtoWithNullCorrectAnswerCreate.textQuestion(), captureQuestion.getQuestion());
+        assertNotNull(captureQuestion.getCorrectAnswer(), "The question isn't null");
+        assertEquals(existingQuestion.getCorrectAnswer().getCorrectAnswer(), captureQuestion.getCorrectAnswer().getCorrectAnswer());
+        assertEquals(existingQuestion.getCorrectAnswer().getVariantOfAnswer(), captureQuestion.getCorrectAnswer().getVariantOfAnswer());
+        assertNotNull(captureQuestion.getWrongAnswers(), "Wrong answers should not be null");
+
+        assertTrue(captureQuestion.getWrongAnswers().isEmpty(), "Wrong answers should not be empty");
+    }
+
+    @Test
+    void questionUpdateShouldRemoveAllWrongAnswersWhenWrongAnswersDTOIsEmpty() {
+        Long existingQuestionId = existingQuestion.getId();
+        QuestionCreateDTO dtoWithEmptyListWrongAnswers = new QuestionCreateDTO(
+                existingQuestion.getQuestion(),
+                new CorrectAnswerCreateDTO("New correct answer with empty wrong answers", VariantOfAnswer.CORRECT),
+                Collections.emptyList()
+        );
+
+        Mockito.when(questionRepository.findQuestionById(existingQuestionId)).thenReturn(Optional.of(existingQuestion));
+        Mockito.when(questionRepository.save(Mockito.any(Question.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        questionService.questionUpdate(existingQuestionId, dtoWithEmptyListWrongAnswers);
+
+        ArgumentCaptor<Question> questionCaptor = ArgumentCaptor.forClass(Question.class);
+        Mockito.verify(questionRepository, Mockito.times(1)).save(questionCaptor.capture());
+
+        Question captureQuestion = questionCaptor.getValue();
+        assertNotNull(captureQuestion);
+
+        assertNotNull(captureQuestion.getCorrectAnswer(), "The question isn't null");
+
+        assertTrue(captureQuestion.getWrongAnswers().isEmpty(), "Wrong answers should not be null");
+
+        assertEquals(dtoWithEmptyListWrongAnswers.correctAnswerCreateDTO().correctAnswer(), captureQuestion.getCorrectAnswer().getCorrectAnswer());
+        assertEquals(dtoWithEmptyListWrongAnswers.correctAnswerCreateDTO().variantOfAnswer(), captureQuestion.getCorrectAnswer().getVariantOfAnswer());
+    }
+
+    @Test
+    void deleteQuestionShouldDeleteExistingQuestionSuccessfully() {
+        Long existingQuestionId = 1L;
+        Mockito.when(questionRepository.existsById(existingQuestionId)).thenReturn(true);
+        Mockito.doNothing().when(questionRepository).deleteById(existingQuestionId);
+        assertDoesNotThrow(() -> questionService.deleteQuestion(existingQuestionId));
+        Mockito.verify(questionRepository, Mockito.times(1)).deleteById(existingQuestionId);
+    }
+
+    @Test
+    void deleteQuestionShouldThrowExceptionWhenQuestionNotExist() {
+        Long nonExistingQuestionId = -1L;
+        Mockito.when(questionRepository.existsById(nonExistingQuestionId)).thenReturn(false);
+
+        QuestionNotFoundById questionNotFoundById = assertThrows(QuestionNotFoundById.class,
+                () -> questionService.deleteQuestion(nonExistingQuestionId));
+
+        Mockito.verify(questionRepository, Mockito.times(1)).existsById(nonExistingQuestionId);
+        Mockito.verify(questionRepository, Mockito.never()).deleteById(nonExistingQuestionId);
+        Mockito.verifyNoMoreInteractions(questionRepository);
+
+        String message = NameException.QUESTION_NOT_FOUND_BY_ID + nonExistingQuestionId;
+        assertEquals(message, questionNotFoundById.getMessage());
     }
 }

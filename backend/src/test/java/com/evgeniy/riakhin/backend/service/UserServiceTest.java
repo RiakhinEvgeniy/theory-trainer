@@ -394,8 +394,6 @@ class UserServiceTest {
         // Если DTO.getRole() null, updateFieldsOfUser не должен менять роль сущности
     }
 
-    // todo add tests from Gemini, for password and посмотреть на оставшиеся тесты от Gemini
-
     @Test
     void deleteUserShouldDeleteExistingUserSuccessfully() {
         Long existsId = 1L;
@@ -406,7 +404,7 @@ class UserServiceTest {
     }
 
     @Test
-    void deleteUser_ShouldThrowException_WhenUserDoesNotExist() {
+    void deleteUserShouldThrowExceptionWhenUserDoesNotExist() {
         Long notExistsId = -2L;
         Mockito.when(userRepository.existsById(notExistsId)).thenReturn(false);
         UserDeleteException thrownException = assertThrows(
