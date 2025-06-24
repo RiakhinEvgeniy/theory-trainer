@@ -70,6 +70,7 @@ public class QuestionService {
         }
 
         CorrectAnswerCreateDTO correctAnswerCreateDTO = questionCreateDTO.correctAnswerCreateDTO();
+
         if (correctAnswerCreateDTO != null) {
 
             CorrectAnswer existingCorrectAnswer = question.getCorrectAnswer();
