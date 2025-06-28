@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="28-06-2025-12-16-00-add-user-by-maven.xml" author="riakhin">
+        <insert tableName="users">
+            <column name="name" value="Anna"/>
+            <column name="email" value="anna@gmail.com"/>
+            <column name="password" value="4444"/>
+            <column name="role" value="USER"/>
+            <column name="version" valueNumeric="0"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="28-06-2025-12-35-00-add-user-by-maven.xml" author="riakhin">
+
+        <insert tableName="users">
+            <column name="name" value="Иван"/>
+            <column name="email" value="ivan@gmail.com"/>
+            <column name="password" value="5555"/>
+            <column name="role" value="GUEST"/>
+            <column name="version" valueNumeric="0"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="28-06-2025-14-00-00-add-pavel-by-maven.xml" author="riakhin">
+
+        <insert tableName="users">
+            <column name="name" value="Pavel"/>
+            <column name="email" value="pavel@gmail.com"/>
+            <column name="password" value="9999"/>
+            <column name="role" value="USER"/>
+            <column name="version" valueNumeric="0"/>
+        </insert>
+
+    </changeSet>
+
+</databaseChangeLog>
