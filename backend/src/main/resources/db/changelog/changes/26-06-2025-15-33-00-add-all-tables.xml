@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="26-06-2025-15-33-00-add-all-tables.xml" author="riakhin">
+        <createTable tableName="question">
+
+            <column name="id" type="bigserial" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="question" type="text">
+                <constraints nullable="false"/>
+            </column>
+
+        </createTable>
+
+    </changeSet>
+
+    <changeSet id="26-06-2025-15-33-01-add-all-tables.xml" author="riakhin">
+
+        <createTable tableName="correct_answer">
+
+            <column name="id" autoIncrement="true" type="bigserial">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="answer" type="text">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="variant" type="varchar(20)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="question_id" type="bigserial">
+                <constraints nullable="false"/>
+            </column>
+
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="correct_answer"
+                                 baseColumnNames="question_id"
+                                 constraintName="fk_correct_answer_question"
+                                 referencedTableName="question"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"
+                                 onUpdate="CASCADE"/>
+
+    </changeSet>
+
+    <changeSet id="26-06-2025-15-33-02-add-all-tables.xml" author="riakhin">
+
+        <createTable tableName="wrong_answer">
+
+            <column name="id" autoIncrement="true" type="bigserial">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="wrong_answer" type="text">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="variant" type="varchar(20)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="question_id" type="bigserial">
+                <constraints nullable="false"/>
+            </column>
+
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="wrong_answer"
+                                 baseColumnNames="question_id"
+                                 constraintName="fk_wrong_answer_question"
+                                 referencedTableName="question"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"
+                                 onUpdate="CASCADE"/>
+
+    </changeSet>
+
+    <changeSet id="26-06-2025-15-33-03-add-all-tables.xml" author="riakhin">
+        <createTable tableName="user_answer_statistics">
+
+            <column name="id" autoIncrement="true" type="bigserial">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="chosen_answer_id" type="bigserial">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="variant" type="varchar(20)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="answered_at" type="timestamp">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="question_id" type="bigserial">
+                <constraints nullable="false" foreignKeyName="fk_wrong_answer_statistics_question"
+                             references="question(id)"/>
+            </column>
+
+            <column name="user_id" type="bigserial">
+                <constraints nullable="false" foreignKeyName="fk_wrong_answer_statistics_user"
+                             references="question(id)"/>
+            </column>
+
+        </createTable>
+
+    </changeSet>
+
+</databaseChangeLog>
