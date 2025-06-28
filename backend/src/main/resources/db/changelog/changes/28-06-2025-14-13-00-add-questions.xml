@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="28-06-2025-14-13-00-add-questions" author="riakhin">
+
+        <insert tableName="question">
+            <column name="question" value="Перечислите методы класса Object?"/>
+        </insert>
+
+        <insert tableName="question">
+            <column name="question" value="Зачем нужны методы equals and hashCode?"/>
+        </insert>
+
+        <insert tableName="question">
+            <column name="question" value="Что будет, если переопределить equals, но не переопределить hashCode?"/>
+        </insert>
+
+        <insert tableName="question">
+            <column name="question" value="Зачем нужны методы wait, notify, notifyAll?"/>
+        </insert>
+
+        <insert tableName="question">
+            <column name="question" value="Как правильно клонировать объект?"/>
+        </insert>
+
+        <insert tableName="question">
+            <column name="question" value="Зачем нужен метод finalize() и как он работает?"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="28-06-2025-14-21-00-add-correct_answers" author="">
+        <insert tableName="correct_answer">
+            <column name="answer" value="boolean equals(Object)
+  int hashcode()
+  String toString()
+  Object clone()
+  Class getClass()
+  void finalize()
+  void wait(), wait(long timeout), wait(long timeout, int nanos)
+  void notify()
+  notifyAll()"/>
+            <column name="variant" value="CORRECT"/>
+            <column name="question_id" value="1"/>
+        </insert>
+
+        <insert tableName="correct_answer">
+            <column name="answer" value="Метод equals() используется для глубокого сравнения двух объектов,
+            которое обычно включает в себя сравнение всех полей между собой.
+            Метод hashcode() используется для быстрого сравнения двух объектов,
+            потому что сравнить два целых числа проще и быстрее, чем все поля,
+            некоторые из которых тоже могут быть объектами.
+            Чаще всего сравнение по хэш-кодам используется в коллекциях для ускорения нахождения необходимого элемента.
+            Сначала объект ищется по хэш-коду, а потом, если объектов с таким хэш-кодом несколько,
+            с помощью метода equals().
+            Объекты, которые различаются между собой хоть немного,
+            должны выдавать false при сравнении друг с другом с помощью equals().
+            Все объекты, которые имеют одинаковые поля, должны выдавать true при сравнении их хэш-кодов."/>
+            <column name="variant" value="CORRECT"/>
+            <column name="question_id" value="2"/>
+        </insert>
+
+        <insert tableName="correct_answer">
+            <column name="answer" value="В таком случае при добавлении ряда объектов в коллекцию и
+            последующем поиске в коллекции одного из элементов, в коллекции ничего не будет обнаружено,
+            потому что в коллекциях сначала идет поиск по совпадению хэш-кода,
+            а затем уже с помощью глубокого сравнения."/>
+            <column name="variant" value="CORRECT"/>
+            <column name="question_id" value="3"/>
+        </insert>
+
+        <insert tableName="correct_answer">
+            <column name="answer" value="Данные методы используются для работы с многопоточностью и вызываются
+            только из синхронизированного блока или метода.
+void notify() - возобновляет выполнение одного ожидающего потока.
+void notifyAll() - возобновляет выполнение всех ожидающих этот объект потоков.
+void wait() - освобождает монитор и переводит вызывающий поток в состояние ожидания до тех пор,
+пока другой поток не вызовет метод notify().
+void wait(long) - ожидание длится указанное количество миллисекунд или до получения уведомления.
+void wait(long, int) - ожидание длится указанное количество миллисекунд и наносекунд."/>
+            <column name="variant" value="CORRECT"/>
+            <column name="question_id" value="4"/>
+        </insert>
+
+        <insert tableName="correct_answer">
+            <column name="answer" value="Необходимо в классе, к которому принадлежит объект,
+            реализовать интерфейс Cloneable и переопределить метод clone().
+            В методе желательно произвести глубокое копирование - то есть скопировать не ссылки на объекты,
+            а сами объекты."/>
+            <column name="variant" value="CORRECT"/>
+            <column name="question_id" value="5"/>
+        </insert>
+
+        <insert tableName="correct_answer">
+            <column name="answer" value="Метод finalize() предназначен для автоматического освобождения
+            системных ресурсов, занимаемых объектом, на котором данный метод будет вызван.
+            Основная цель этого метода – освободить используемые внешние не-Java ресурсы: закрыть файлы,
+            потоки ввода-вывода и т.п. Когда сборщик мусора (GC) добирается до ненужного объекта,
+            то перед его удалением он должен вызвать метод finalize(), который, в свою очередь,
+            должен быть переопределен в удаляемом объекте.
+Недостатки:
+- нет гарантии, что он будет вызван, т.к. где-то может остаться ссылка на объект.
+- нет гарантии на то, в какое время будет вызван метод, так как он не вызывается сразу,
+а помещается в очередь, которая обрабатывается специально созданным для этого потоком.
+В очередь на финализацию попадают только те объекты, в которых переопределен метод finalize.
+- есть вероятность, что этот метод не будет вызван совсем. Это может произойти в момент,
+когда объект уже станет доступным для сборщика мусора и программа завершит свою работу.
+Для освобождения ресурсов рекомендуется использовать конструкции try - catch - finally или try-with-resourses."/>
+            <column name="variant" value="CORRECT"/>
+            <column name="question_id" value="6"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="28-06-2025-14-13-00-add-wrong_answer" author="riakhin">
+        <insert tableName="wrong_answer">
+            <column name="wrong_answer" value="finalize(), notifyAll(), parseInt(), split()"/>
+            <column name="variant" value="INCORRECT"/>
+            <column name="question_id" value="1"/>
+        </insert>
+
+        <insert tableName="wrong_answer">
+            <column name="wrong_answer" value="equals(), wait(), toString(), getBytes()"/>
+            <column name="variant" value="INCORRECT"/>
+            <column name="question_id" value="1"/>
+        </insert>
+
+        <insert tableName="wrong_answer">
+            <column name="wrong_answer" value="hashCode(), clone(), length(), format()"/>
+            <column name="variant" value="INCORRECT"/>
+            <column name="question_id" value="1"/>
+        </insert>
+
+        <insert tableName="wrong_answer">
+            <column name="wrong_answer" value="equals() используется для сравнения хеш-кодов объектов,
+hashCode() возвращает уникальный идентификатор процесса, в котором был создан объект."/>
+            <column name="variant" value="INCORRECT"/>
+            <column name="question_id" value="2"/>
+        </insert>
+
+        <insert tableName="wrong_answer">
+            <column name="wrong_answer" value="equals() сравнивает ссылки на объекты, как оператор ==,
+hashCode() используется только внутри JVM и недоступен в пользовательском код"/>
+            <column name="variant" value="INCORRECT"/>
+            <column name="question_id" value="2"/>
+        </insert>
+
+        <insert tableName="wrong_answer">
+            <column name="wrong_answer" value="quals() проверяет, равны ли поля типа int внутри объекта,
+hashCode() нужен, чтобы отслеживать количество вызовов метода equals()."/>
+            <column name="variant" value="INCORRECT"/>
+            <column name="question_id" value="2"/>
+        </insert>
+
+        <insert tableName="wrong_answer">
+            <column name="wrong_answer" value="Объекты будут корректно сравниваться и помещаться в HashSet,
+            так как equals() важнее hashCode()."/>
+            <column name="variant" value="INCORRECT"/>
+            <column name="question_id" value="3"/>
+        </insert>
+
+        <insert tableName="wrong_answer">
+            <column name="wrong_answer" value="Ничего страшного не произойдёт — hashCode() вообще не
+            используется в коллекциях, если переопределён equals()."/>
+            <column name="variant" value="INCORRECT"/>
+            <column name="question_id" value="3"/>
+        </insert>
+
+        <insert tableName="wrong_answer">
+            <column name="wrong_answer" value="Объекты не смогут сравниваться с null, потому что hashCode()
+            по умолчанию не позволяет этого делать."/>
+            <column name="variant" value="INCORRECT"/>
+            <column name="question_id" value="3"/>
+        </insert>
+
+        <insert tableName="wrong_answer">
+            <column name="wrong_answer" value="Эти методы используются для создания потоков и их
+            принудительного завершения."/>
+            <column name="variant" value="INCORRECT"/>
+            <column name="question_id" value="4"/>
+        </insert>
+
+        <insert tableName="wrong_answer">
+            <column name="wrong_answer" value="wait() останавливает выполнение метода main(),
+notify() запускает новый поток,
+notifyAll() завершает все потоки, кроме текущего."/>
+            <column name="variant" value="INCORRECT"/>
+            <column name="question_id" value="4"/>
+        </insert>
+
+        <insert tableName="wrong_answer">
+            <column name="wrong_answer" value="Методы wait(), notify() и notifyAll() применяются только
+            для работы с файлами и сетевыми соединениями, чтобы синхронизировать ввод-вывод."/>
+            <column name="variant" value="INCORRECT"/>
+            <column name="question_id" value="4"/>
+        </insert>
+
+        <insert tableName="wrong_answer">
+            <column name="wrong_answer" value="Чтобы клонировать объект, нужно просто присвоить его другой переменной:
+MyObject copy = original;"/>
+            <column name="variant" value="INCORRECT"/>
+            <column name="question_id" value="5"/>
+        </insert>
+
+        <insert tableName="wrong_answer">
+            <column name="wrong_answer" value="Объекты клонируются автоматически при передаче в метод,
+            если они реализуют интерфейс Serializable."/>
+            <column name="variant" value="INCORRECT"/>
+            <column name="question_id" value="5"/>
+        </insert>
+
+        <insert tableName="wrong_answer">
+            <column name="wrong_answer" value="Чтобы клонировать объект, достаточно вызвать метод newInstance()
+            на любом классе: MyObject copy = MyObject.class.newInstance();"/>
+            <column name="variant" value="INCORRECT"/>
+            <column name="question_id" value="5"/>
+        </insert>
+
+        <insert tableName="wrong_answer">
+            <column name="wrong_answer" value="Метод finalize() вызывается вручную программистом,
+            чтобы завершить работу потока перед его удалением из памяти."/>
+            <column name="variant" value="INCORRECT"/>
+            <column name="question_id" value="6"/>
+        </insert>
+
+        <insert tableName="wrong_answer">
+            <column name="wrong_answer" value="finalize() автоматически вызывается каждый раз при выходе
+            из любого метода, чтобы освободить ресурсы."/>
+            <column name="variant" value="INCORRECT"/>
+            <column name="question_id" value="6"/>
+        </insert>
+
+        <insert tableName="wrong_answer">
+            <column name="wrong_answer" value="Метод finalize() используется в Java для принудительного
+            удаления объекта из памяти и запускается при вызове System.exit()."/>
+            <column name="variant" value="INCORRECT"/>
+            <column name="question_id" value="6"/>
+        </insert>
+    </changeSet>
+
+
+</databaseChangeLog>

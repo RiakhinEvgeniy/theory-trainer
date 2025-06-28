@@ -24,7 +24,7 @@
 import { useState } from 'react'
 
 function getNextPrevQuestionById() {
-    const [questionById, setNextQuestion] = useState<number>(27);
+    const [questionById, setNextQuestion] = useState<number>(1);
 
     const nextQuestion = function getNextUser() {
         setNextQuestion(() => questionById + 1);
