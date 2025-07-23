@@ -47,7 +47,7 @@ function QuizPage({ idQuestion }: QuestionIdQuizPageProps) {
 
         // setQuestion(null);
         setMessageError(null);
-        // setIsLoading(true);
+        setIsLoading(false);
         setSelectedAnswerId(null);
         setIsCorrectAnswer(null);
 
@@ -153,7 +153,7 @@ function QuizPage({ idQuestion }: QuestionIdQuizPageProps) {
                 {isCorrectAnswer ? (
                     <span style={{ color: 'green' }}>Ответ ВЕРНЫЙ!</span>
                 ) : (
-                    <span style={{ color: 'red' }}>Ответ НЕВЕРНЫЙ.</span>
+                    <span style={{ color: 'red' }}>Ответ НЕВЕРНЫЙ. Попробуйте выбрать другой ответ.</span>
                 )}
             </div>
         )}

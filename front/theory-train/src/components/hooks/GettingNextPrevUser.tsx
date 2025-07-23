@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
 function getNextPrevUserById() {
-    const [getUserById, setNextUser] = useState<number>(3);
+    const [getUserById, setNextUser] = useState<number>(1);
 
     const nextUser = function getNextUser() {
         setNextUser(() => getUserById + 1);
