@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="23-07-2025-14-46-00-change-id-first-WrongAnswer.xml" author="riakhin">
+        <update tableName="wrong_answer">
+            <column name="id" valueNumeric="10000"/>
+            <where>id = 1</where>
+        </update>
+    </changeSet>
+
+    <changeSet id="23-07-2025-14-46-10-fix-sequence" author="riakhin" runOnChange="true">
+        <sql>
+            SELECT setval(pg_get_serial_sequence('wrong_answer', 'id'), GREATEST((SELECT MAX(id) FROM wrong_answer), 1));
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>
